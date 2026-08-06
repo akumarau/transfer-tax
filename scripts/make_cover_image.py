@@ -188,42 +188,49 @@ def chart(x0: int, y0: int, x1: int, y1: int, data, label_size: int = 17) -> str
 
 
 def cover_wide(data) -> str:
+    """1200x628.
+
+    LinkedIn crops article covers to a wider banner than the file you upload,
+    taking the bite out of the top and bottom. So nothing important goes above
+    y=95 or below y=540. Type is sized to stay legible once LinkedIn scales the
+    image down to roughly 744px wide in the article body.
+    """
     W, H = 1200, 628
     svg = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
            f'viewBox="0 0 {W} {H}" font-family="Segoe UI, Helvetica, Arial, sans-serif">',
            defs(), f'<rect width="{W}" height="{H}" fill="url(#bg)"/>']
 
-    svg.append(f'<rect x="0" y="0" width="7" height="{H}" fill="{AMBER}"/>')
-    svg.append(f'<text x="58" y="92" fill="{MUTED}" font-size="16" letter-spacing="3.5" '
-               f'font-weight="600">SUPPORT OPERATIONS</text>')
-    svg.append(f'<text x="56" y="176" fill="{PAPER}" font-size="70" '
-               f'font-weight="700" letter-spacing="-1.5">The Transfer Tax</text>')
-    svg.append(f'<text x="58" y="228" fill="{BLUE}" font-size="26" font-weight="500">'
+    # Accent bar stops short of the crop line at each end.
+    svg.append(f'<rect x="0" y="100" width="8" height="435" fill="{AMBER}"/>')
+
+    svg.append(f'<text x="56" y="200" fill="{PAPER}" font-size="72" '
+               f'font-weight="700" letter-spacing="-1.8">The Transfer Tax</text>')
+    svg.append(f'<text x="58" y="252" fill="{BLUE}" font-size="30" font-weight="500">'
                f'What every handoff really costs</text>')
 
-    svg.append(f'<line x1="58" y1="270" x2="440" y2="270" stroke="{MUTED}" '
-               f'stroke-opacity="0.28" stroke-width="1.5"/>')
+    svg.append(f'<line x1="58" y1="292" x2="470" y2="292" stroke="{MUTED}" '
+               f'stroke-opacity="0.3" stroke-width="1.5"/>')
 
     facts = [
         ("2.1", "\u00d7", "the labour cost after three transfers"),
         ("18", "\u00d7", "the elapsed time the customer waits"),
         ("42", "%", "of the original context still surviving"),
     ]
-    y = 322
+    y = 350
     for big, unit, text in facts:
-        svg.append(f'<text x="58" y="{y}" fill="{AMBER}" font-size="42" '
-                   f'font-weight="700">{big}<tspan font-size="26">{unit}</tspan></text>')
-        svg.append(f'<text x="152" y="{y - 4}" fill="{PAPER}" font-size="18" '
-                   f'opacity="0.92">{text}</text>')
-        y += 74
+        svg.append(f'<text x="58" y="{y}" fill="{AMBER}" font-size="48" '
+                   f'font-weight="700">{big}<tspan font-size="29">{unit}</tspan></text>')
+        svg.append(f'<text x="172" y="{y - 5}" fill="{PAPER}" font-size="21" '
+                   f'opacity="0.95">{text}</text>')
+        y += 68
 
-    svg.append(f'<text x="58" y="{H - 42}" fill="{MUTED}" font-size="16">'
+    svg.append(f'<text x="58" y="524" fill="{MUTED}" font-size="19">'
                f'github.com/akumarau/transfer-tax</text>')
 
-    svg.append(f'<text x="612" y="92" fill="{MUTED}" font-size="15" letter-spacing="2">'
+    svg.append(f'<text x="604" y="146" fill="{MUTED}" font-size="18" letter-spacing="2">'
                f'CONTEXT SURVIVING vs LABOUR COST</text>')
-    svg.append(chart(612, 120, 1150, 520, data))
-    svg.append(f'<text x="881" y="{H - 42}" fill="{MUTED}" font-size="15" '
+    svg.append(chart(604, 198, 1150, 455, data, label_size=21))
+    svg.append(f'<text x="877" y="521" fill="{MUTED}" font-size="18" '
                f'text-anchor="middle">NUMBER OF TRANSFERS</text>')
 
     svg.append("</svg>")
