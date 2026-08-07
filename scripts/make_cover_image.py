@@ -19,7 +19,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from transfer_tax import CaseParams, labour_minutes, retained_context  # noqa: E402
+from transfer_tax import (  # noqa: E402
+    CaseParams,
+    labour_minutes,
+    retained_context,
+    routing_accuracy,
+)
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -268,6 +273,72 @@ def cover_square(data) -> str:
     return wrap("".join(svg), W, H), W, H
 
 
+def loop_diagram(alphas) -> str:
+    """The specialisation loop. This section of the article makes a claim about a
+    cycle, and a cycle is the one thing prose is worst at showing."""
+    W, H = 1280, 720
+    cx, cy = 640, 372
+    svg = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
+           f'viewBox="0 0 {W} {H}" font-family="Segoe UI, Helvetica, Arial, sans-serif">',
+           defs(),
+           '<marker id="arrow" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="7" '
+           f'markerHeight="7" orient="auto-start-reverse">'
+           f'<path d="M 0 0 L 12 6 L 0 12 z" fill="{AMBER}"/></marker>',
+           f'<rect width="{W}" height="{H}" fill="url(#bg)"/>']
+
+    svg.append(f'<text x="{cx}" y="62" fill="{PAPER}" font-size="40" font-weight="700" '
+               f'text-anchor="middle">Specialisation manufactures its own transfers</text>')
+
+    boxes = [
+        (cx, 152, "Transfers rise"),
+        (992, 372, "Blamed on a skill gap"),
+        (cx, 592, "A new specialist queue opens"),
+        (288, 372, "First touch resolution falls"),
+    ]
+    bw, bh = 330, 84
+    for bx, by, label in boxes:
+        svg.append(
+            f'<rect x="{bx - bw / 2}" y="{by - bh / 2}" width="{bw}" height="{bh}" '
+            f'rx="12" fill="#123049" stroke="{BLUE}" stroke-opacity="0.55" '
+            f'stroke-width="2"/>')
+        svg.append(f'<text x="{bx}" y="{by + 9}" fill="{PAPER}" font-size="23" '
+                   f'font-weight="600" text-anchor="middle">{label}</text>')
+
+    arcs = [
+        (cx + bw / 2, 152, 992, 372 - bh / 2, 992, 152),
+        (992, 372 + bh / 2, cx + bw / 2, 592, 992, 592),
+        (cx - bw / 2, 592, 288, 372 + bh / 2, 288, 592),
+        (288, 372 - bh / 2, cx - bw / 2, 152, 288, 152),
+    ]
+    for x1, y1, x2, y2, qx, qy in arcs:
+        svg.append(
+            f'<path d="M {x1} {y1} Q {qx} {qy} {x2} {y2}" fill="none" '
+            f'stroke="{AMBER}" stroke-width="4" stroke-linecap="round" '
+            f'marker-end="url(#arrow)" opacity="0.9"/>')
+
+    svg.append(f'<circle cx="{cx}" cy="{cy}" r="128" fill="#0E2740" '
+               f'stroke="{BLUE}" stroke-opacity="0.3" stroke-width="2"/>')
+    svg.append(f'<text x="{cx}" y="{cy - 74}" fill="{MUTED}" font-size="15" '
+               f'letter-spacing="1.6" text-anchor="middle">FIRST TOUCH RESOLUTION</text>')
+
+    row_y = cy - 34
+    for queues, alpha in alphas:
+        label = "1 queue" if queues == 1 else f"{queues} queues"
+        svg.append(f'<text x="{cx - 18}" y="{row_y}" fill="{PAPER}" font-size="21" '
+                   f'text-anchor="end" opacity="0.85">{label}</text>')
+        svg.append(f'<text x="{cx + 14}" y="{row_y}" fill="{AMBER}" font-size="27" '
+                   f'font-weight="700">{alpha * 100:.0f}%</text>')
+        row_y += 44
+
+    svg.append(f'<text x="{cx}" y="{cy + 96}" fill="{BLUE}" font-size="18" '
+               f'font-style="italic" text-anchor="middle">the taxonomy only grows</text>')
+
+    svg.append(f'<text x="56" y="{H - 34}" fill="{MUTED}" font-size="17">'
+               f'github.com/akumarau/transfer-tax</text>')
+    svg.append("</svg>")
+    return wrap("".join(svg), W, H), W, H
+
+
 def main() -> None:
     out = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path.cwd() / "cover"
     out.mkdir(parents=True, exist_ok=True)
@@ -278,14 +349,23 @@ def main() -> None:
         sys.exit(1)
 
     data = series()
+    alphas = [(m, routing_accuracy(m, 0.35)) for m in (1, 10, 25)]
+
     print("Numbers taken from the model:")
     for d in data:
         print(f"  {d['n']} transfers  context {d['context']:6.1%}  "
               f"labour {d['labour']:6.1f} min")
+    for m, a in alphas:
+        print(f"  {m:>3} queues     first touch resolution {a:6.1%}")
     print()
 
-    for name, builder in (("cover-wide", cover_wide), ("cover-square", cover_square)):
-        html, w, h = builder(data)
+    jobs = [
+        ("cover-wide", lambda: cover_wide(data)),
+        ("cover-square", lambda: cover_square(data)),
+        ("loop-diagram", lambda: loop_diagram(alphas)),
+    ]
+    for name, builder in jobs:
+        html, w, h = builder()
         src = out / f"_{name}.html"
         src.write_text(html, encoding="utf-8")
         png = out / f"{name}.png"

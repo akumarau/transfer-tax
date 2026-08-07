@@ -146,11 +146,12 @@ Where does n come from? Mostly from us.
 Adding a specialist queue adds no information at intake. Here is a toy model.
 Let a be the fraction of cases whose destination is obvious on arrival. Spread
 the rest across m queues. Then first touch success is roughly a + (1−a)/m. With
-35% obvious at intake, ten queues gives about 41%. Twenty five queues gives
+35% obvious at intake, ten queues gives about 42%. Twenty five queues gives
 about 38%.
 
-Treat that as illustration only. The real curve almost certainly falls faster,
-because finer fragmentation also reduces the share of obvious cases.
+Treat those numbers as illustrative rather than measured. The real curve almost
+certainly falls faster, because finer fragmentation also reduces the share of
+obvious cases.
 
 What matters is the loop. Transfers get blamed on a skill gap. The fix for a
 skill gap is a more specialised queue. That lowers first touch resolution. Which
