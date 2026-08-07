@@ -1,10 +1,12 @@
+![The Transfer Tax](figures/cover-wide.png)
+
 # The Transfer Tax
 
 **What every case transfer actually costs, and how good a single owner has to be
 before owning the case end to end beats routing it to a specialist.**
 
 This repository is the working out behind the article
-*[The Transfer Tax: what every handoff really costs your support business](https://www.linkedin.com/in/anupamkumarau/)*.
+**[The Transfer Tax](https://www.linkedin.com/pulse/transfer-tax-anupam-kumar-girne/)**.
 It exists so the argument can be checked rather than believed.
 
 Everything here is runnable. Every number quoted in the article is produced by
@@ -108,6 +110,8 @@ E[n] = 1/α(m) − 1             expected transfers
 This is a loop, not a line. Transfers get diagnosed as a skill gap, so the
 organisation stands up another specialist queue, which lowers routing accuracy,
 which produces more transfers. `m` only ever goes up.
+
+![The specialisation loop](figures/loop-diagram.png)
 
 ### 3. The pooling penalty
 
@@ -367,5 +371,8 @@ Anonymised is fine.
 ## Licence
 
 MIT. Use it, fork it, argue with it.
+
+Article: **[The Transfer Tax](https://www.linkedin.com/pulse/transfer-tax-anupam-kumar-girne/)**
+(also in [ARTICLE.md](ARTICLE.md))
 
 — [Anupam Kumar](https://www.linkedin.com/in/anupamkumarau/)

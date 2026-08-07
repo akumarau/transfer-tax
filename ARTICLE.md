@@ -2,6 +2,13 @@
 
 ### Three transfers more than double the cost of a case. And the bar a single owner has to clear turns out to be one number you already measure.
 
+> Published on LinkedIn:
+> **https://www.linkedin.com/pulse/transfer-tax-anupam-kumar-girne/**
+>
+> This is the source text. The model, proof and sensitivity analysis behind
+> every figure are in [README.md](README.md), and every source is in
+> [RESEARCH.md](RESEARCH.md).
+
 ---
 
 Six days. Four owners. Twenty minutes of actual work.
