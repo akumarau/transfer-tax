@@ -454,6 +454,6 @@ Put your numbers in and tell me I am wrong. That is what it is there for.
 
 ---
 
-*Anupam Kumar leads support engineering teams. Views are his own.
-The model in this article is his. The errors, once someone finds them, will be
-in the commit history.*
+*Anupam Kumar leads support engineering teams. Views are his own. The model in
+this article is his. The errors, once someone finds them, will be in the commit
+history.*
